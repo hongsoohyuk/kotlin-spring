@@ -38,6 +38,3 @@ out/
 
 ### Tooling ###
 .serena/
-
-### Sensitive config ###
-fc-board/src/main/resources/application.yml
