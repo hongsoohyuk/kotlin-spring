@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class FcBoardApplication
 
 fun main(args: Array<String>) {
-    runApplication<FcBoardApplication>(*args)
+  runApplication<FcBoardApplication>(*args)
 }

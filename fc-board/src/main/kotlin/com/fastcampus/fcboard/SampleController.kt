@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class SampleController {
-    @GetMapping("/sample")
-    fun sample(): String {
-        return "Hello world!"
-    }
+  @GetMapping("/sample")
+  fun sample(): String {
+    return "Hello world!"
+  }
 
-    @PostMapping("/sample")
-    fun samplePost(@RequestParam name: String): String {
-        return "Hello $name!"
-    }
+  @PostMapping("/sample")
+  fun samplePost(@RequestParam name: String): String {
+    return "Hello $name!"
+  }
 }

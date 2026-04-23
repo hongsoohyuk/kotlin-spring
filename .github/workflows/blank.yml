@@ -6,12 +6,18 @@ env:
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'fc-board/**'
+      - '.github/workflows/**'
 
 jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
     environment: production
+    defaults:
+      run:
+        working-directory: fc-board
 
     steps:
     - name: Checkout
@@ -48,4 +54,4 @@ jobs:
         application_name: fc-board
         environment_name: Fc-board-env
         version_label: github-action-${{steps.current-time.outputs.formattedTime}}
-        deployment_package: deploy/deploy.zip
+        deployment_package: fc-board/deploy/deploy.zip
