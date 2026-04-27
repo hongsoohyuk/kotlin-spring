@@ -1,0 +1,28 @@
+### Create
+POST /localhost:8080/posts
+Content-type: application/json
+
+{
+    "title": "title",
+    "content": "content",
+    "createdBy": "author"
+}
+
+### Update
+PUT /localhost:8080/posts/11
+Content-Type: application/json
+
+{
+    "title": "title",
+    "content": "content",
+    "updatedBy": "author"
+}
+
+### Delete
+DELETE /localhost:8080/posts/1?createdBy=hihi
+
+### Detail
+GET /localhost:8080/posts/1
+
+### List
+GET /localhost:8080/posts?page=0‡size=10&title=title&createdBy=hihi
