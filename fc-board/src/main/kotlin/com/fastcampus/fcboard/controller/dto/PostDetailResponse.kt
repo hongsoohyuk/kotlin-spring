@@ -5,5 +5,5 @@ data class PostDetailResponse(
   val title: String,
   val content: String,
   val createdAt: String,
-  val createdBy: String
+  val createdBy: String,
 )

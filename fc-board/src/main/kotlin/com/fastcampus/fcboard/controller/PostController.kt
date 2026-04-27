@@ -24,15 +24,15 @@ class PostController {
   fun createPost(
     @RequestBody postCreateRequest: PostCreateRequest,
   ): Long {
-    return 1L;
+    return 1L
   }
 
   @PutMapping("/posts/{id}")
   fun updatePost(
     @PathVariable id: Long,
-    @RequestBody postUpdateRequest: PostUpdateRequest
+    @RequestBody postUpdateRequest: PostUpdateRequest,
   ): Long {
-    return 1L;
+    return 1L
   }
 
   @DeleteMapping("/posts/{id}")
@@ -41,7 +41,7 @@ class PostController {
     @RequestParam createdBy: String,
   ): Long {
     println(createdBy)
-    return 1L;
+    return 1L
   }
 
   @GetMapping("/posts/{id}")
