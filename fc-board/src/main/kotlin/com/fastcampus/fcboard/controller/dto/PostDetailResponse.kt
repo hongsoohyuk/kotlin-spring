@@ -1,7 +1,6 @@
 package com.fastcampus.fcboard.controller.dto
 
 import com.fastcampus.fcboard.service.dto.PostDetailResponseDto
-import org.springframework.data.jpa.domain.AbstractPersistable_.id
 
 data class PostDetailResponse(
   val id: Long,
@@ -9,12 +8,14 @@ data class PostDetailResponse(
   val content: String,
   val createdAt: String,
   val createdBy: String,
+  val comments: List<CommentResponse> = emptyList<CommentResponse>(),
 )
 
-fun PostDetailResponseDto.toResponse() = PostDetailResponse(
-  id = id,
-  title = title,
-  content = content,
-  createdBy = createdBy,
-  createdAt = createdAt,
-)
+fun PostDetailResponseDto.toResponse() =
+  PostDetailResponse(
+    id = id,
+    title = title,
+    content = content,
+    createdBy = createdBy,
+    createdAt = createdAt,
+  )

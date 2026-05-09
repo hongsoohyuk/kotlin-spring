@@ -1,0 +1,20 @@
+### create comment
+POST localhost:8080/posts/1/comments
+Content-Type: application/json
+
+{
+  "content": "comment",
+  "createdBy": "commenter"
+}
+
+### update comment
+PUT localhost:8080/comments/1
+Content-Type: application/json
+
+{
+  "content": "comment",
+  "updatedBy": "commenter"
+}
+
+### delete comment
+DELETE localhost:8080/comments/1?deletedBy=commenter
