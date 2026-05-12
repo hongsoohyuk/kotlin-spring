@@ -15,7 +15,7 @@ fun Page<PostSummaryResponseDto>.toResponse() =
   PageImpl(
     content.map { it.toResponse() },
     pageable,
-    totalElements,
+    totalElements
   )
 
 fun PostSummaryResponseDto.toResponse() =
@@ -23,5 +23,5 @@ fun PostSummaryResponseDto.toResponse() =
     id = id,
     title = title,
     createdBy = createdBy,
-    createdAt = createdAt,
+    createdAt = createdAt
   )

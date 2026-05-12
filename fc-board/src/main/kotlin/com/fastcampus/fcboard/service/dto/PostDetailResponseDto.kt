@@ -2,7 +2,7 @@ package com.fastcampus.fcboard.service.dto
 
 import com.fastcampus.fcboard.domain.Post
 
-data class PostDetailResponseDto (
+data class PostDetailResponseDto(
   val id: Long,
   val title: String,
   val content: String,
@@ -10,7 +10,7 @@ data class PostDetailResponseDto (
   val createdAt: String,
 )
 
-fun Post.toDetailResponseDto() =  PostDetailResponseDto(
+fun Post.toDetailResponseDto() = PostDetailResponseDto(
   id = id,
   title = title,
   content = content,

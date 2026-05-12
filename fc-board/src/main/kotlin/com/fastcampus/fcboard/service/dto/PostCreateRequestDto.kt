@@ -12,5 +12,5 @@ fun PostCreateRequestDto.toEntity(): Post =
   Post(
     title = title,
     content = content,
-    createdBy = createdBy,
+    createdBy = createdBy
   )

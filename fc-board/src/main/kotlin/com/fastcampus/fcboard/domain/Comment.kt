@@ -1,7 +1,7 @@
 package com.fastcampus.fcboard.domain
 
-import com.fastcampus.fcboard.exception.PostNotUpdatableException
-import com.fastcampus.fcboard.service.dto.PostUpdateRequestDto
+import com.fastcampus.fcboard.exception.CommentNotUpdatableException
+import com.fastcampus.fcboard.service.dto.CommentUpdateRequestDto
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
@@ -26,12 +26,12 @@ class Comment(
   var post: Post = post
     protected set
 
-//  fun update(postUpdateRequestDto: PostUpdateRequestDto) {
-//    if (this.createdBy != postUpdateRequestDto.updatedBy) {
-//      throw PostNotUpdatableException()
-//    }
-//
-//    this.content = postUpdateRequestDto.content
-//    super.updatedBy(postUpdateRequestDto.updatedBy)
-//  }
+  fun update(commentUpdateRequestDto: CommentUpdateRequestDto) {
+    if (this.createdBy != commentUpdateRequestDto.updatedBy) {
+      throw CommentNotUpdatableException()
+    }
+
+    this.content = commentUpdateRequestDto.content
+    super.updatedBy(commentUpdateRequestDto.updatedBy)
+  }
 }
