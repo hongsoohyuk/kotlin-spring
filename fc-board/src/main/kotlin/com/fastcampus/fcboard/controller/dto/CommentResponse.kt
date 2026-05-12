@@ -6,3 +6,11 @@ data class CommentResponse(
   val createdAt: String,
   val createdBy: String,
 )
+
+fun CommentResponseDto.toResponse() =
+  CommentResponse(
+    id = id,
+    content = content,
+    createdAt = createdAt,
+    createdBy = createdBy,
+  )

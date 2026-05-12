@@ -8,12 +8,15 @@ data class PostDetailResponseDto(
   val content: String,
   val createdBy: String,
   val createdAt: String,
+  val comments: List<CommentresponseDto>,
 )
 
-fun Post.toDetailResponseDto() = PostDetailResponseDto(
-  id = id,
-  title = title,
-  content = content,
-  createdBy = createdBy,
-  createdAt = createdAt.toString()
-)
+fun Post.toDetailResponseDto() =
+  PostDetailResponseDto(
+    id = id,
+    title = title,
+    content = content,
+    createdBy = createdBy,
+    createdAt = createdAt.toString(),
+    comments = comments.map { it.toResponseDto() },
+  )
