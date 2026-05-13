@@ -9,6 +9,7 @@ data class PostDetailResponse(
   val createdAt: String,
   val createdBy: String,
   val comments: List<CommentResponse> = emptyList<CommentResponse>(),
+  val tags: List<String> = emptyList<String>(),
 )
 
 fun PostDetailResponseDto.toResponse() =

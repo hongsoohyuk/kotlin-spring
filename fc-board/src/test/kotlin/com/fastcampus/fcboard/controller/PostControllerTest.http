@@ -5,7 +5,8 @@ Content-type: application/json
 {
     "title": "title",
     "content": "content",
-    "createdBy": "author"
+    "createdBy": "author",
+    "tags": ["tag1", "tag2"]
 }
 
 ### Update
@@ -15,7 +16,8 @@ Content-Type: application/json
 {
     "title": "title",
     "content": "content",
-    "updatedBy": "author"
+    "updatedBy": "author",
+    "tags": ["tag1", "tag3"]
 }
 
 ### Delete

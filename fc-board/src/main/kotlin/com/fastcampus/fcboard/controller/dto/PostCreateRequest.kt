@@ -6,6 +6,7 @@ data class PostCreateRequest(
   val title: String,
   val content: String,
   val createdBy: String,
+  val tags: List<String> = emptyList<String>(),
 )
 
 fun PostCreateRequest.toDto() = PostCreateRequestDto(title = title, content = content, createdBy = createdBy)
