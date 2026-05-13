@@ -9,4 +9,4 @@ data class PostUpdateRequest(
   val tags: List<String> = emptyList<String>(),
 )
 
-fun PostUpdateRequest.toDto() = PostUpdateRequestDto(title, content, updatedBy)
+fun PostUpdateRequest.toDto() = PostUpdateRequestDto(title, content, updatedBy, tags)

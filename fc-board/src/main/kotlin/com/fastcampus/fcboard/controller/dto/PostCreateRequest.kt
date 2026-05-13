@@ -9,4 +9,9 @@ data class PostCreateRequest(
   val tags: List<String> = emptyList<String>(),
 )
 
-fun PostCreateRequest.toDto() = PostCreateRequestDto(title = title, content = content, createdBy = createdBy)
+fun PostCreateRequest.toDto() = PostCreateRequestDto(
+  title = title,
+  content = content,
+  createdBy = createdBy,
+  tags = tags
+)
