@@ -1,0 +1,3 @@
+### like
+
+POST localhost:8080/posts/1/likes/createdBy=name

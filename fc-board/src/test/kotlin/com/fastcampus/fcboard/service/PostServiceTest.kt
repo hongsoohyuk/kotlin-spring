@@ -265,6 +265,6 @@ class PostServiceTest(
           it.firstTag shouldBe "tag1"
         }
       }
-    } 
+    }
   }
 })
