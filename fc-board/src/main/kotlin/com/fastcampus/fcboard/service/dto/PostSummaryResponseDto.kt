@@ -10,20 +10,22 @@ data class PostSummaryResponseDto(
   val createdBy: String,
   val createdAt: String,
   val firstTag: String? = null,
+  val likeCount: Long = 0,
 )
 
-fun Page<Post>.toSummaryResponseDto() =
+fun Page<Post>.toSummaryResponseDto(countLike: (Long) -> Long) =
   PageImpl(
-    content.map { it.toSummaryResponseDto() },
+    content.map { it.toSummaryResponseDto(countLike) },
     pageable,
     totalElements
   )
 
-fun Post.toSummaryResponseDto() =
+fun Post.toSummaryResponseDto(countLike: (Long) -> Long) =
   PostSummaryResponseDto(
     id = id,
     title = title,
     createdBy = createdBy,
     createdAt = createdAt.toString(),
-    firstTag = tags.firstOrNull()?.name
+    firstTag = tags.firstOrNull()?.name,
+    likeCount = countLike(id)
   )

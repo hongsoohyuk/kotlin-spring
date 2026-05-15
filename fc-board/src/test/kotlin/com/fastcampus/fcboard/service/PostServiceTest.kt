@@ -28,20 +28,21 @@ class PostServiceTest(
   private val postRepository: PostRepository,
   private val commentRepository: CommentRepository,
   private val tagRepository: TagRepository,
+  private val likeService: LikeService,
 ) : BehaviorSpec({
   beforeSpec {
     postRepository.saveAll(
       listOf(
         Post(title = "title1", content = "content1", createdBy = "name1", tags = listOf("tag1", "tag2")),
-        Post(title = "title2", content = "content1", createdBy = "name1", tags = listOf("tag1", "tag2")),
-        Post(title = "title3", content = "content1", createdBy = "name1", tags = listOf("tag1", "tag2")),
-        Post(title = "title4", content = "content1", createdBy = "name1", tags = listOf("tag1", "tag2")),
-        Post(title = "title5", content = "content1", createdBy = "name1", tags = listOf("tag1", "tag2")),
-        Post(title = "title11", content = "content1", createdBy = "name2", tags = listOf("tag1", "tag2")),
-        Post(title = "title12", content = "content1", createdBy = "name2", tags = listOf("tag1", "tag2")),
-        Post(title = "title13", content = "content1", createdBy = "name2", tags = listOf("tag1", "tag2")),
-        Post(title = "title14", content = "content1", createdBy = "name2", tags = listOf("tag1", "tag2")),
-        Post(title = "title15", content = "content1", createdBy = "name2", tags = listOf("tag1", "tag2"))
+        Post(title = "title12", content = "content1", createdBy = "name1", tags = listOf("tag1", "tag2")),
+        Post(title = "title13", content = "content1", createdBy = "name1", tags = listOf("tag1", "tag2")),
+        Post(title = "title14", content = "content1", createdBy = "name1", tags = listOf("tag1", "tag2")),
+        Post(title = "title15", content = "content1", createdBy = "name1", tags = listOf("tag1", "tag2")),
+        Post(title = "title6", content = "content1", createdBy = "name2", tags = listOf("tag1", "tag5")),
+        Post(title = "title7", content = "content1", createdBy = "name2", tags = listOf("tag1", "tag5")),
+        Post(title = "title8", content = "content1", createdBy = "name2", tags = listOf("tag1", "tag5")),
+        Post(title = "title9", content = "content1", createdBy = "name2", tags = listOf("tag1", "tag5")),
+        Post(title = "title10", content = "content1", createdBy = "name2", tags = listOf("tag1", "tag5"))
       )
     )
   }
@@ -194,6 +195,10 @@ class PostServiceTest(
   given("get post") {
     val saved = postRepository.save(Post(title = "title", content = "content", createdBy = "name"))
     tagRepository.saveAll(listOf(Tag("tag1", saved, "name"), Tag("tag2", saved, "name"), Tag("tag3", saved, "name")))
+
+    likeService.createLike(saved.id, "person1")
+    likeService.createLike(saved.id, "person2")
+    likeService.createLike(saved.id, "person3")
     When("valid get") {
       val post = postService.getPost(saved.id)
       then("check post is retrieved") {
@@ -206,6 +211,9 @@ class PostServiceTest(
         post.tags[0] shouldBe "tag1"
         post.tags[1] shouldBe "tag2"
         post.tags[2] shouldBe "tag3"
+      }
+      then("like count retrieved") {
+        post.likeCount shouldBe 3
       }
     }
     When("no post") {
@@ -263,6 +271,34 @@ class PostServiceTest(
       then("first tag returned") {
         postPage.content.forEach {
           it.firstTag shouldBe "tag1"
+        }
+      }
+    }
+
+    When("search by tag") {
+      val postPage = postService.findPageBy(PageRequest.of(0, 5), PostSearchRequestDto(tag = "tag5"))
+      then("post page returned") {
+        postPage.number shouldBe 0
+        postPage.size shouldBe 5
+        postPage.content.size shouldBe 5
+        postPage.content[0].title shouldBe "title10"
+        postPage.content[1].title shouldBe "title9"
+        postPage.content[2].title shouldBe "title8"
+        postPage.content[3].title shouldBe "title7"
+        postPage.content[4].title shouldBe "title6"
+      }
+    }
+
+    When("like added") {
+      val postPage = postService.findPageBy(PageRequest.of(0, 5), PostSearchRequestDto(tag = "tag5"))
+      postPage.content.forEach {
+        likeService.createLike(it.id, "person1")
+        likeService.createLike(it.id, "person2")
+      }
+      val likedPostPage = postService.findPageBy(PageRequest.of(0, 5), PostSearchRequestDto(tag = "tag5"))
+      then("like count returned") {
+        likedPostPage.content.forEach {
+          it.likeCount shouldBe 2
         }
       }
     }

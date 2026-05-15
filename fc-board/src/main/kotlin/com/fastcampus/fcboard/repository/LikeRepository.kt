@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface LikeRepository :
   JpaRepository<Like, Long> {
-  fun findByPostId(postId: Long): List<Like>
+  fun countByPostId(postId: Long): Long
 }
