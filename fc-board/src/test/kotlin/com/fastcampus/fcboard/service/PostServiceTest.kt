@@ -29,241 +29,242 @@ class PostServiceTest(
   private val commentRepository: CommentRepository,
   private val tagRepository: TagRepository,
 ) : BehaviorSpec({
-    beforeSpec {
-      postRepository.saveAll(
-        listOf(
-          Post(title = "title1", content = "content1", createdBy = "name1", tags = listOf("tag1", "tag2")),
-          Post(title = "title2", content = "content1", createdBy = "name1", tags = listOf("tag1", "tag2")),
-          Post(title = "title3", content = "content1", createdBy = "name1", tags = listOf("tag1", "tag2")),
-          Post(title = "title4", content = "content1", createdBy = "name1", tags = listOf("tag1", "tag2")),
-          Post(title = "title5", content = "content1", createdBy = "name1", tags = listOf("tag1", "tag2")),
-          Post(title = "title11", content = "content1", createdBy = "name2", tags = listOf("tag1", "tag2")),
-          Post(title = "title12", content = "content1", createdBy = "name2", tags = listOf("tag1", "tag2")),
-          Post(title = "title13", content = "content1", createdBy = "name2", tags = listOf("tag1", "tag2")),
-          Post(title = "title14", content = "content1", createdBy = "name2", tags = listOf("tag1", "tag2")),
-          Post(title = "title15", content = "content1", createdBy = "name2", tags = listOf("tag1", "tag2")),
-        ),
+  beforeSpec {
+    postRepository.saveAll(
+      listOf(
+        Post(title = "title1", content = "content1", createdBy = "name1", tags = listOf("tag1", "tag2")),
+        Post(title = "title2", content = "content1", createdBy = "name1", tags = listOf("tag1", "tag2")),
+        Post(title = "title3", content = "content1", createdBy = "name1", tags = listOf("tag1", "tag2")),
+        Post(title = "title4", content = "content1", createdBy = "name1", tags = listOf("tag1", "tag2")),
+        Post(title = "title5", content = "content1", createdBy = "name1", tags = listOf("tag1", "tag2")),
+        Post(title = "title11", content = "content1", createdBy = "name2", tags = listOf("tag1", "tag2")),
+        Post(title = "title12", content = "content1", createdBy = "name2", tags = listOf("tag1", "tag2")),
+        Post(title = "title13", content = "content1", createdBy = "name2", tags = listOf("tag1", "tag2")),
+        Post(title = "title14", content = "content1", createdBy = "name2", tags = listOf("tag1", "tag2")),
+        Post(title = "title15", content = "content1", createdBy = "name2", tags = listOf("tag1", "tag2"))
       )
-    }
-    given("ㄱㅔ시글 작성시") {
-      When("게시글 입력이 정상적") {
-        val postId =
-          postService.createPost(
-            PostCreateRequestDto(
-              title = "title",
-              content = "content",
-              createdBy = "name",
-            ),
+    )
+  }
+  given("ㄱㅔ시글 작성시") {
+    When("게시글 입력이 정상적") {
+      val postId =
+        postService.createPost(
+          PostCreateRequestDto(
+            title = "title",
+            content = "content",
+            createdBy = "name"
           )
-        then("게시글이 정상적으로 생성됨.") {
-          postId shouldBeGreaterThan 0L
-          val post = postRepository.findByIdOrNull(postId)
-          post shouldNotBe null
-          post?.title shouldBe "title"
-          post?.content shouldBe "content"
-          post?.createdBy shouldBe "name"
-        }
-      }
-      When("tags added") {
-        val postId =
-          postService.createPost(
-            PostCreateRequestDto(
-              title = "title with tags",
-              content = "content with tags",
-              createdBy = "name",
-              tags = listOf("tag1", "tag2"),
-            ),
-          )
-        then("태그가 정상적으로 생성됨.") {
-          val tags = tagRepository.findByPostId(postId)
-          tags.size shouldBe 2
-          tags[0].name shouldBe "tag1"
-          tags[1].name shouldBe "tag2"
-        }
-      }
-    }
-
-    given("게시글 수정시") {
-      val saved =
-        postRepository.save(
-          Post(title = "title", content = "content", createdBy = "name", tags = listOf("tag1", "tag2")),
         )
-      When("정상 수정시") {
-        val updatedId =
+      then("게시글이 정상적으로 생성됨.") {
+        postId shouldBeGreaterThan 0L
+        val post = postRepository.findByIdOrNull(postId)
+        post shouldNotBe null
+        post?.title shouldBe "title"
+        post?.content shouldBe "content"
+        post?.createdBy shouldBe "name"
+      }
+    }
+    When("tags added") {
+      val postId =
+        postService.createPost(
+          PostCreateRequestDto(
+            title = "title with tags",
+            content = "content with tags",
+            createdBy = "name",
+            tags = listOf("tag1", "tag2")
+          )
+        )
+      then("태그가 정상적으로 생성됨.") {
+        val tags = tagRepository.findByPostId(postId)
+        tags.size shouldBe 2
+        tags[0].name shouldBe "tag1"
+        tags[1].name shouldBe "tag2"
+      }
+    }
+  }
+
+  given("게시글 수정시") {
+    val saved =
+      postRepository.save(
+        Post(title = "title", content = "content", createdBy = "name", tags = listOf("tag1", "tag2"))
+      )
+    When("정상 수정시") {
+      val updatedId =
+        postService.updatePost(
+          saved.id,
+          PostUpdateRequestDto(
+            title = "updated title",
+            content = "updated name",
+            updatedBy = "name"
+          )
+        )
+
+      then("게시글이 정상적으로 수정됨을 확인.") {
+        saved.id shouldBe updatedId
+        val updated = postRepository.findByIdOrNull(updatedId)
+        updated?.title shouldBe "updated title"
+        updated?.content shouldBe "updated name"
+        updated?.updatedBy shouldBe "name"
+      }
+    }
+
+    When("When post not found") {
+      then("error, Post not found.") {
+        shouldThrow<PostNotFoundException> {
           postService.updatePost(
-            saved.id,
+            999L,
             PostUpdateRequestDto(
               title = "updated title",
               content = "updated name",
-              updatedBy = "name",
-            ),
-          )
-
-        then("게시글이 정상적으로 수정됨을 확인.") {
-          saved.id shouldBe updatedId
-          val updated = postRepository.findByIdOrNull(updatedId)
-          updated?.title shouldBe "updated title"
-          updated?.content shouldBe "updated name"
-          updated?.updatedBy shouldBe "name"
-        }
-      }
-
-      When("When post not found") {
-        then("error, Post not found.") {
-          shouldThrow<PostNotFoundException> {
-            postService.updatePost(
-              999L,
-              PostUpdateRequestDto(
-                title = "updated title",
-                content = "updated name",
-                updatedBy = "updated name",
-              ),
+              updatedBy = "updated name"
             )
-          }
+          )
         }
       }
+    }
 
-      When("Not same creator") {
-        then("error, Post not same creator") {
-          shouldThrow<PostNotUpdatableException> {
-            postService.updatePost(
-              1L,
-              PostUpdateRequestDto(
-                title = "updated title",
-                content = "updated name",
-                updatedBy = "updated name",
-              ),
+    When("Not same creator") {
+      then("error, Post not same creator") {
+        shouldThrow<PostNotUpdatableException> {
+          postService.updatePost(
+            1L,
+            PostUpdateRequestDto(
+              title = "updated title",
+              content = "updated name",
+              updatedBy = "updated name"
             )
-          }
-        }
-      }
-
-      When("tags updated") {
-        val updatedId =
-          postService.updatePost(
-            saved.id,
-            PostUpdateRequestDto(
-              title = "updated title",
-              content = "updated name",
-              updatedBy = "name",
-              tags = listOf("tag3", "tag4"),
-            ),
           )
-        then("태그가 정상적으로 수정됨.") {
-          val tags = tagRepository.findByPostId(updatedId)
-          tags.size shouldBe 2
-          tags[0].name shouldBe "tag3"
-          tags[1].name shouldBe "tag4"
         }
+      }
+    }
 
-        then("태그 순서가 변경되었을때, 정상적으로 수정됨.") {
-          postService.updatePost(
-            saved.id,
-            PostUpdateRequestDto(
-              title = "updated title",
-              content = "updated name",
-              updatedBy = "name",
-              tags = listOf("tag4", "tag3"),
-            ),
+    When("tags updated") {
+      val updatedId =
+        postService.updatePost(
+          saved.id,
+          PostUpdateRequestDto(
+            title = "updated title",
+            content = "updated name",
+            updatedBy = "name",
+            tags = listOf("tag3", "tag4")
           )
-          val tags = tagRepository.findByPostId(saved.id)
-          tags.size shouldBe 2
-          tags[0].name shouldBe "tag4"
-          tags[1].name shouldBe "tag3"
-        }
+        )
+      then("태그가 정상적으로 수정됨.") {
+        val tags = tagRepository.findByPostId(updatedId)
+        tags.size shouldBe 2
+        tags[0].name shouldBe "tag3"
+        tags[1].name shouldBe "tag4"
+      }
+
+      then("태그 순서가 변경되었을때, 정상적으로 수정됨.") {
+        postService.updatePost(
+          saved.id,
+          PostUpdateRequestDto(
+            title = "updated title",
+            content = "updated name",
+            updatedBy = "name",
+            tags = listOf("tag4", "tag3")
+          )
+        )
+        val tags = tagRepository.findByPostId(saved.id)
+        tags.size shouldBe 2
+        tags[0].name shouldBe "tag4"
+        tags[1].name shouldBe "tag3"
       }
     }
-    given("given delete post") {
-      val saved = postRepository.save(Post(title = "title", content = "content", createdBy = "name"))
+  }
+  given("given delete post") {
+    val saved = postRepository.save(Post(title = "title", content = "content", createdBy = "name"))
 
-      When("valid deletion") {
-        val postId = postService.deletePost(saved.id, "name")
-        then("check post is deleted") {
-          postId shouldBe saved.id
-          postRepository.findByIdOrNull(saved.id) shouldBe null
-        }
-      }
-      When("not same creator") {
-        val anotherSaved = postRepository.save(Post(title = "title", content = "content", createdBy = "name"))
-
-        then("error, Post not same creator") {
-          shouldThrow<PostNotDeletableException> { postService.deletePost(anotherSaved.id, "unknown") }
-        }
+    When("valid deletion") {
+      val postId = postService.deletePost(saved.id, "name")
+      then("check post is deleted") {
+        postId shouldBe saved.id
+        postRepository.findByIdOrNull(saved.id) shouldBe null
       }
     }
-    given("get post") {
-      val saved = postRepository.save(Post(title = "title", content = "content", createdBy = "name"))
-      tagRepository.saveAll(listOf(Tag("tag1", saved, "name"), Tag("tag2", saved, "name"), Tag("tag3", saved, "name")))
-      When("valid get") {
-        val post = postService.getPost(saved.id)
-        then("check post is retrieved") {
-          post.title shouldBe "title"
-          post.content shouldBe "content"
-          post.createdBy shouldBe "name"
-        }
-        then("tags retrieved") {
-          post.tags.size shouldBe 3
-          post.tags[0] shouldBe "tag1"
-          post.tags[1] shouldBe "tag2"
-          post.tags[2] shouldBe "tag3"
-        }
-      }
-      When("no post") {
-        then("error, Post not found") {
-          shouldThrow<PostNotFoundException> { postService.getPost(9999L) }
-        }
-      }
+    When("not same creator") {
+      val anotherSaved = postRepository.save(Post(title = "title", content = "content", createdBy = "name"))
 
-      When("comment added") {
-        commentRepository.save(Comment("comment content1", saved, "comment person"))
-        commentRepository.save(Comment("comment content2", saved, "comment person"))
-        commentRepository.save(Comment("comment content3", saved, "comment person"))
-        val post = postService.getPost(saved.id)
-        then("commend retrieved") {
-          post.comments.size shouldBe 3
-          post.comments[0].content shouldBe "comment content1"
-          post.comments[1].content shouldBe "comment content2"
-          post.comments[2].content shouldBe "comment content3"
-        }
+      then("error, Post not same creator") {
+        shouldThrow<PostNotDeletableException> { postService.deletePost(anotherSaved.id, "unknown") }
+      }
+    }
+  }
+  given("get post") {
+    val saved = postRepository.save(Post(title = "title", content = "content", createdBy = "name"))
+    tagRepository.saveAll(listOf(Tag("tag1", saved, "name"), Tag("tag2", saved, "name"), Tag("tag3", saved, "name")))
+    When("valid get") {
+      val post = postService.getPost(saved.id)
+      then("check post is retrieved") {
+        post.title shouldBe "title"
+        post.content shouldBe "content"
+        post.createdBy shouldBe "name"
+      }
+      then("tags retrieved") {
+        post.tags.size shouldBe 3
+        post.tags[0] shouldBe "tag1"
+        post.tags[1] shouldBe "tag2"
+        post.tags[2] shouldBe "tag3"
+      }
+    }
+    When("no post") {
+      then("error, Post not found") {
+        shouldThrow<PostNotFoundException> { postService.getPost(9999L) }
       }
     }
 
-    given("list posts") {
-      When("valid list request") {
-        val postPage = postService.findPageBy(PageRequest.of(0, 5), PostSearchRequestDto())
-        then("post page returned") {
-          postPage.number shouldBe 0
-          postPage.size shouldBe 5
-          postPage.content.size shouldBe 5
-          postPage.content[0].title shouldContain "title"
-          postPage.content[0].createdBy shouldContain "name"
+    When("comment added") {
+      commentRepository.save(Comment("comment content1", saved, "comment person"))
+      commentRepository.save(Comment("comment content2", saved, "comment person"))
+      commentRepository.save(Comment("comment content3", saved, "comment person"))
+      val post = postService.getPost(saved.id)
+      then("commend retrieved") {
+        post.comments.size shouldBe 3
+        post.comments[0].content shouldBe "comment content1"
+        post.comments[1].content shouldBe "comment content2"
+        post.comments[2].content shouldBe "comment content3"
+      }
+    }
+  }
+
+  given("list posts") {
+    When("valid list request") {
+      val postPage = postService.findPageBy(PageRequest.of(0, 5), PostSearchRequestDto())
+      then("post page returned") {
+        postPage.number shouldBe 0
+        postPage.size shouldBe 5
+        postPage.content.size shouldBe 5
+        postPage.content[0].title shouldContain "title"
+        postPage.content[0].createdBy shouldContain "name"
+      }
+    }
+
+    When("search by title") {
+      val postPage = postService.findPageBy(PageRequest.of(0, 5), PostSearchRequestDto(title = "title"))
+      then("post page returned") {
+        postPage.number shouldBe 0
+        postPage.size shouldBe 5
+        postPage.content.size shouldBe 5
+        postPage.content[0].title shouldContain "title"
+        postPage.content[0].createdBy shouldContain "name"
+      }
+    }
+
+    When("search by creator") {
+      val postPage = postService.findPageBy(PageRequest.of(0, 5), PostSearchRequestDto(createdBy = "name1"))
+      then("post page returned") {
+        postPage.number shouldBe 0
+        postPage.size shouldBe 5
+        postPage.content.size shouldBe 5
+        postPage.content[0].title shouldContain "title"
+        postPage.content[0].createdBy shouldBe "name1"
+      }
+      then("first tag returned") {
+        postPage.content.forEach {
+          it.firstTag shouldBe "tag1"
         }
       }
-
-      When("search by title") {
-        val postPage = postService.findPageBy(PageRequest.of(0, 5), PostSearchRequestDto(title = "title"))
-        then("post page returned") {
-          postPage.number shouldBe 0
-          postPage.size shouldBe 5
-          postPage.content.size shouldBe 5
-          postPage.content[0].title shouldContain "title"
-          postPage.content[0].createdBy shouldContain "name"
-        }
-      }
-
-      When("search by creator") {
-        val postPage = postService.findPageBy(PageRequest.of(0, 5), PostSearchRequestDto(createdBy = "name1"))
-        then("post page returned") {
-          postPage.number shouldBe 0
-          postPage.size shouldBe 5
-          postPage.content.size shouldBe 5
-          postPage.content[0].title shouldContain "title"
-          postPage.content[0].createdBy shouldBe "name1"
-        }
-        then("first tag returned"){
-          postPage.content.forEach {
-            it.firstTag shouldBe "tag1"
-          }
-        }
-      }}
-  })
+    } 
+  }
+})
