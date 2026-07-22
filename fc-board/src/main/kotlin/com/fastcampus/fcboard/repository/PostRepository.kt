@@ -31,8 +31,7 @@ class CustomPostRepositoryImpl :
       from(post)
         .where(
           postSearchRequestDto.title?.let { post.title.contains(it) },
-          postSearchRequestDto.createdBy?.let { post.createdBy.eq(it) },
-          postSearchRequestDto.tag?.let { post.tags.any().name.eq(it) }
+          postSearchRequestDto.createdBy?.let { post.createdBy.eq(it) }
         )
         .orderBy(post.createdAt.desc())
         .offset(pageRequest.offset)
