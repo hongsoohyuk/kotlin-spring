@@ -27,6 +27,7 @@ dependencies {
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
   implementation("org.jetbrains.kotlin:kotlin-reflect")
   implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
+  implementation("org.springframework.boot:spring-boot-starter-data-redis")
   runtimeOnly("com.mysql:mysql-connector-j")
   kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")

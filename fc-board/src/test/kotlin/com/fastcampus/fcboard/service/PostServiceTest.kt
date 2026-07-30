@@ -21,6 +21,7 @@ import io.kotest.matchers.string.shouldContain
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
+import org.testcontainers.containers.GenericContainer
 
 @SpringBootTest
 class PostServiceTest(
@@ -31,6 +32,10 @@ class PostServiceTest(
   private val likeService: LikeService,
 ) : BehaviorSpec({
   beforeSpec {
+    val redisContainer = GenericContainer<Nothing>("redis:5.0.3-alpine")
+    redisContainer.portBindings.add("16379:6379")
+    redisContainer.start()
+
     postRepository.saveAll(
       listOf(
         Post(title = "title1", content = "content1", createdBy = "name1", tags = listOf("tag1", "tag2")),
@@ -45,6 +50,9 @@ class PostServiceTest(
         Post(title = "title10", content = "content1", createdBy = "name2", tags = listOf("tag1", "tag5"))
       )
     )
+  }
+  afterSpec {
+    redisContainer.stop()
   }
   given("ㄱㅔ시글 작성시") {
     When("게시글 입력이 정상적") {
