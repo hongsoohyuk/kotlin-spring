@@ -14,14 +14,14 @@ class RedisUtil(
   fun getData(key: String): Any? {
     return redisTemplate.opsForValue().get(key)
   }
-  
+
   fun increment(key: String) {
     redisTemplate.opsForValue().increment(key, 1L)
   }
-  
-  fun getCount (key: String):Long? {
+
+  fun getCount(key: String): Long? {
     return redisTemplate.opsForValue().get(key)?.toString()?.toLong()
   }
 
-  fun getLikeCountKey(postId: Long): String {return "like:${postId}"}
+  fun getLikeCountKey(postId: Long): String { return "like:$postId" }
 }
